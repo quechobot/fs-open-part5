@@ -12,6 +12,26 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [alertMessage, setAlertMessage] = useState(null)
+  const [notificationStyle, setNotificationStyle] = useState(null)
+  const redNotificationStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+  const greenNotificationStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,7 +61,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error('Wrong credentials')
+      setNotificationStyle(redNotificationStyle);
+      setAlertMessage(`invalid username or password`)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
       setUsername('')
       setPassword('')
     }
@@ -65,8 +89,17 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
-    } catch (e) {
-
+      setNotificationStyle(greenNotificationStyle);
+      setAlertMessage(`new blog added: ${returnedBlog["title"]}`)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
+    } catch (exception) {
+      setNotificationStyle(redNotificationStyle);
+      setAlertMessage(`upsss '${exception}' !!!!! `)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
     }
   }
 
@@ -125,10 +158,21 @@ const App = () => {
       )
   }
 
+  const Notification = ({ message, notificationStyle}) => {
+    if (message === null) {
+      return null
+    }
+    return (
+        <div style={notificationStyle}>
+          {message}
+        </div>
+    )
+  }
 
   return (
       <div>
         <h1>Blog App</h1>
+        <Notification message={alertMessage} notificationStyle={notificationStyle}/>
         {user === null ? loginForm() :
             <div>
               <p>{user.name} logged-in</p>
