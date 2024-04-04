@@ -80,6 +80,7 @@ const App = () => {
   const handlePost = async (newBlogObject) => {
     try {
       const returnedBlog =  await blogService.create(newBlogObject)
+      returnedBlog.user = user;
       setBlogs(blogs.concat(returnedBlog))
       blogFormRef.current.toggleVisibility()
       setNotificationStyle(greenNotificationStyle);
@@ -95,7 +96,6 @@ const App = () => {
       }, 3000);
     }
   }
-
   const loginForm = () =>{
     return (
       <div>
