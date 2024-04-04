@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from "./components/Togglable.jsx";
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
   const [url, setUrl] = useState("")
   const [alertMessage, setAlertMessage] = useState(null)
   const [notificationStyle, setNotificationStyle] = useState(null)
+  const blogFormRef = useRef()
   const redNotificationStyle = {
     color: 'red',
     background: 'lightgrey',
@@ -89,6 +91,7 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      blogFormRef.current.toggleVisibility()
       setNotificationStyle(greenNotificationStyle);
       setAlertMessage(`new blog added: ${returnedBlog["title"]}`)
       setTimeout(() => {
@@ -177,10 +180,11 @@ const App = () => {
             <div>
               <p>{user.name} logged-in</p>
               <button onClick={handleLogOut}> log out </button>
-              <h1>Create</h1>
-              {blogForm()}
+              <Togglable buttonLabel='new note' ref={blogFormRef}>
+                <h1>Create</h1>
+                {blogForm()}
+              </Togglable>
               {blogList()}
-
             </div>
         }
       </div>
