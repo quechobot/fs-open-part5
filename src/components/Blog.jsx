@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-const Blog = ({ blog, updateLikes }) => {
+const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
   const [label, setLabel] = useState("view")
   const blogStyle = {
@@ -10,6 +10,8 @@ const Blog = ({ blog, updateLikes }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+  const blogUsername = typeof blog.user === 'undefined' ? null : blog.user.username
+  const blogUserCreator = blogUsername === userLogged.username
   const showInfo = () => {
     visible ? setVisible(false) : setVisible(true)
     visible ? setLabel("view") : setLabel("hide")
@@ -26,15 +28,24 @@ const Blog = ({ blog, updateLikes }) => {
         </>
     )
   }
+  const deleteButton = (onSmash) => {
+      return <button onClick={onSmash}>delete</button>
+  }
+  const handleDelete = (deleteBlogId) => {
+      if (window.confirm("remove blog: "+blog.title+" ?")) {
+          deleteBlog(deleteBlogId)
+      }
+  }
   const blogInfo = () =>{
     return (
         <>
           <div>{blog.url}</div>
           <div>
             likes: {blog.likes}
-            <button onClick={()=>handleLike(blog)}>like</button>
+            <button onClick={()=>handleLike(blog.id)}>like</button>
           </div>
           <div>{typeof blog.user === 'undefined' ? "" : blog.user.username}</div>
+            {blogUserCreator?deleteButton(handleDelete):""}
         </>
     )
   }

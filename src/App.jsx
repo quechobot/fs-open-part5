@@ -124,6 +124,24 @@ const App = () => {
       }, 3000);
     }
   }
+  const handeDelete = async (blogObject) => {
+    try {
+      await blogService.deleteBlog(blogObject.id)
+      setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+      setNotificationStyle(redNotificationStyle);
+      setAlertMessage(`blog ${blogObject.title} deleted`)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000)
+    } catch (e){
+      setNotificationStyle(redNotificationStyle);
+      setAlertMessage(`upsss '${e}' !!!!! `)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
+
+    }
+  }
 
   const loginForm = () =>{
     return (
@@ -158,7 +176,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} updateLikes={handleLikes}/>
+                <Blog key={blog.id} blog={blog} updateLikes={handleLikes} userLogged={user} deleteBlog={()=>handeDelete(blog)}/>
             )}
           </div>
       )
