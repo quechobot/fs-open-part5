@@ -1,5 +1,6 @@
 import {useState} from "react";
-const Blog = ({ blog }) => {
+
+const Blog = ({ blog, updateLikes }) => {
   const [visible, setVisible] = useState(false)
   const [label, setLabel] = useState("view")
   const blogStyle = {
@@ -12,6 +13,11 @@ const Blog = ({ blog }) => {
   const showInfo = () => {
     visible ? setVisible(false) : setVisible(true)
     visible ? setLabel("view") : setLabel("hide")
+  }
+  const handleLike =  (putBlog) => {
+      putBlog.likes += 1
+      updateLikes(putBlog)
+      //const updatedBlog = await blogService.put(putBlog)
   }
   const blogPreview = () => {
     return(
@@ -26,9 +32,9 @@ const Blog = ({ blog }) => {
           <div>{blog.url}</div>
           <div>
             likes: {blog.likes}
-            <button>like</button>
+            <button onClick={()=>handleLike(blog)}>like</button>
           </div>
-          <div>{blog.user.username}</div>
+          <div>{typeof blog.user === 'undefined' ? "" : blog.user.username}</div>
         </>
     )
   }

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import usersService from './services/users'
 import Togglable from "./components/Togglable"
 import BlogForm from "./components/BlogForm"
 
@@ -80,7 +81,8 @@ const App = () => {
   const handlePost = async (newBlogObject) => {
     try {
       const returnedBlog =  await blogService.create(newBlogObject)
-      returnedBlog.user = user;
+      const returnedUserBlog = await usersService.getById(returnedBlog.user)
+      returnedBlog.user = returnedUserBlog;
       setBlogs(blogs.concat(returnedBlog))
       blogFormRef.current.toggleVisibility()
       setNotificationStyle(greenNotificationStyle);
@@ -96,6 +98,28 @@ const App = () => {
       }, 3000);
     }
   }
+  const handleLikes = async (putBlogObject) => {
+    try {
+      const returnedBlog =  await blogService.put( putBlogObject.id, putBlogObject)
+      const returnedUserBlog = await usersService.getById(returnedBlog.user)
+      returnedBlog.user = returnedUserBlog;
+      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.map(blog => (blog.id === returnedBlog.id ? returnedBlog : blog)))
+      blogFormRef.current.toggleVisibility()
+      setNotificationStyle(greenNotificationStyle)
+      setAlertMessage(`blog: ${returnedBlog["title"]} updated`)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
+    } catch (exception) {
+      setNotificationStyle(redNotificationStyle);
+      setAlertMessage(`upsss '${exception}' !!!!! `)
+      setTimeout(() => {
+        setAlertMessage(null)
+      }, 3000);
+    }
+  }
+
   const loginForm = () =>{
     return (
       <div>
@@ -129,7 +153,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog}/>
+                <Blog key={blog.id} blog={blog} updateLikes={handleLikes}/>
             )}
           </div>
       )
