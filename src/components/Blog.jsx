@@ -19,13 +19,12 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   const handleLike =  (putBlog) => {
     putBlog.likes += 1
     updateLikes(putBlog)
-    //const updatedBlog = await blogService.put(putBlog)
   }
   const blogPreview = () => {
     return(
-      <>
+      <div id='blog-preview'>
         {blog.title} {blog.author}
-      </>
+      </div>
     )
   }
   const deleteButton = (onSmash) => {
@@ -38,7 +37,7 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   }
   const blogInfo = () => {
     return (
-      <>
+      <div id='blog-info'>
         <div>{blog.url}</div>
         <div>
           likes: {blog.likes}
@@ -46,7 +45,7 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
         </div>
         <div>{typeof blog.user === 'undefined' ? '' : blog.user.username}</div>
         {blogUserCreator?deleteButton(handleDelete):''}
-      </>
+      </div>
     )
   }
   return (
