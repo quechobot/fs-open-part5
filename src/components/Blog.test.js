@@ -2,7 +2,7 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Blog from "./Blog";
+import Blog from './Blog'
 
 describe('<Blog />', () => {
   let container
@@ -10,7 +10,7 @@ describe('<Blog />', () => {
     const blog = {
       'title': 'blog test',
       'author':'tester',
-      'url':'test',
+      'url':'www.test.com',
       'likes':'0',
     }
     const user = userEvent.setup()
@@ -20,7 +20,8 @@ describe('<Blog />', () => {
       <Blog blog={blog} updateLikes={handleLikes} userLogged={user} deleteBlog={deleteBlog}/>
     ).container
   })
-  test('render blog only title default', async () => {
+
+  test('render blog only title default', () => {
     const divTitle = container.querySelector('#blog-preview')
     const blogTitle = screen.getByText('blog test', { exact: false })
     const divInfo = container.querySelector('#blog-info')
@@ -28,4 +29,17 @@ describe('<Blog />', () => {
     expect(divTitle).toBeDefined()
     expect(divInfo).toBeNull()
   })
+
+  test('render blogInfo when push the button', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+    const divInfo = container.querySelector('#blog-info')
+    const url = screen.getByText('www.test.com')
+    const likes = screen.getByText('likes', { exact: false })
+    expect(divInfo).toBeDefined()
+    expect(url).toBeDefined()
+    expect(likes).toBeDefined()
+  })
+
 })
