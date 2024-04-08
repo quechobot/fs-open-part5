@@ -42,4 +42,16 @@ describe('<Blog />', () => {
     expect(likes).toBeDefined()
   })
 
+  test('the button like calls twice with two pushes', async () => {
+    const user = userEvent.setup()
+    const buttonView = screen.getByText('view')
+    await user.click(buttonView)
+    const mockHandler = jest.fn()
+    const buttonLike = screen.getByText('like')
+    buttonLike.addEventListener('click', mockHandler)
+    await user.click(buttonLike)
+    await user.click(buttonLike)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
+
 })
