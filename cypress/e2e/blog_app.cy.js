@@ -108,5 +108,45 @@ describe('Blog app', function() {
       cy.contains('a blog created by cypress 2').parent().children('.blog-info').as('blogInfo-2')
       cy.get('@blogInfo-2').should('contain', 'delete')
     })
+
+    it('order blogs by mostliked blog', function () {
+      cy.createBlog({
+        'title': 'a first blog created by cypress',
+        'author': 'Tester',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.createBlog({
+        'title': 'a second blog created by cypress',
+        'author': 'Tester',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.createBlog({
+        'title': 'a third blog created by cypress',
+        'author': 'Tester',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.get('#blogs>div').as('blogList')
+      cy.get('@blogList').contains('a first blog created by cypress').find('button').click()
+      cy.get('@blogList').contains('a second blog created by cypress').find('button').click()
+      cy.get('@blogList').contains('a third blog created by cypress').find('button').click()
+      cy.get('@blogList').contains('a first blog created by cypress').parent().children('.blog-info').as('blogInfo-1')
+      cy.get('@blogList').contains('a second blog created by cypress').parent().children('.blog-info').as('blogInfo-2')
+      cy.get('@blogList').contains('a third blog created by cypress').parent().children('.blog-info').as('blogInfo-3')
+      cy.get('@blogInfo-1').contains('like').click()
+      cy.wait(1000)
+      cy.get('@blogInfo-2').contains('like').click()
+      cy.wait(1000)
+      cy.get('@blogInfo-2').contains('like').click()
+      cy.wait(1000)
+      cy.get('@blogInfo-3').contains('like').click()
+      cy.wait(1000)
+      cy.get('@blogInfo-3').contains('like').click()
+      cy.wait(1000)
+      cy.get('@blogInfo-3').contains('like').click()
+      cy.wait(1000)
+      cy.get('#blogs>div').eq(0).should('contain', 'a third blog created by cypress')
+      cy.get('#blogs>div').eq(1).should('contain', 'a second blog created by cypress')
+      cy.get('#blogs>div').eq(2).should('contain', 'a first blog created by cypress')
+    })
   })
 })
