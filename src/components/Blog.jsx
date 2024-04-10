@@ -22,7 +22,7 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   }
   const blogPreview = () => {
     return(
-      <div id='blog-preview'>
+      <div className='blog-preview'>
         {blog.title} {blog.author}
         <button onClick={showInfo}>{label}</button>
       </div>
@@ -38,7 +38,7 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   }
   const blogInfo = () => {
     return (
-      <div id='blog-info'>
+      <div className='blog-info'>
         <div>{blog.url}</div>
         <div>
           likes: {blog.likes}

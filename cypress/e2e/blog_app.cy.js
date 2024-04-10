@@ -6,8 +6,13 @@ describe('Blog app', function() {
       username: 'tester',
       password: 'sekret'
     }
+    const user2 = {
+      name: 'Mr Tester 2',
+      username: 'tester 2',
+      password: 'sekret2'
+    }
     cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
-
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user2)
     cy.visit('')
   })
 
@@ -59,7 +64,7 @@ describe('Blog app', function() {
       })
       cy.contains('a blog created by cypress').parent().find('button').as('viewButton-1')
       cy.get('@viewButton-1').click()
-      cy.contains('a blog created by cypress').parent().get('#blog-info').as('blogInfo-1')
+      cy.contains('a blog created by cypress').parent().get('.blog-info').as('blogInfo-1')
       cy.get('@blogInfo-1').contains('like').as('likeButton-1')
       cy.get('@blogInfo-1').contains('likes: 0')
       cy.get('@likeButton-1').click()
@@ -74,10 +79,34 @@ describe('Blog app', function() {
       })
       cy.contains('a blog created by cypress').parent().find('button').as('viewButton-1')
       cy.get('@viewButton-1').click()
-      cy.contains('a blog created by cypress').parent().get('#blog-info').as('blogInfo-1')
+      cy.contains('a blog created by cypress').parent().get('.blog-info').as('blogInfo-1')
       cy.get('@blogInfo-1').contains('delete').as('deleteButton-1')
       cy.get('@deleteButton-1').click()
       cy.get('html').should('not.contain', 'a blog created by cypress')
+    })
+
+    it('user can delete his own created blogs', function () {
+      cy.createBlog({
+        'title': 'a blog created by cypress',
+        'author': 'Tester',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.contains('log out').click()
+      cy.login({ username: 'tester 2', password: 'sekret2' })
+      cy.createBlog({
+        'title': 'a blog created by cypress 2',
+        'author': 'Tester 2',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.contains('a blog created by cypress').parent().find('button').as('viewButton-1')
+      cy.get('@viewButton-1').click()
+      cy.contains('a blog created by cypress').parent().children('.blog-info').as('blogInfo-1')
+      cy.get('@blogInfo-1').should('not.contain', 'delete')
+
+      cy.contains('a blog created by cypress 2').parent().find('button').as('viewButton-2')
+      cy.get('@viewButton-2').click()
+      cy.contains('a blog created by cypress 2').parent().children('.blog-info').as('blogInfo-2')
+      cy.get('@blogInfo-2').should('contain', 'delete')
     })
   })
 })
