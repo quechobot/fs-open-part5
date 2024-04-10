@@ -24,6 +24,7 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
     return(
       <div id='blog-preview'>
         {blog.title} {blog.author}
+        <button onClick={showInfo}>{label}</button>
       </div>
     )
   }
@@ -51,7 +52,6 @@ const Blog = ({ blog, updateLikes, userLogged, deleteBlog }) => {
   return (
     <div style={blogStyle}>
       {blogPreview()}
-      <button onClick={showInfo}>{label}</button>
       {visible ? blogInfo():''}
     </div>
 

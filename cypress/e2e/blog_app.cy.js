@@ -36,4 +36,20 @@ describe('Blog app', function() {
         .and('have.css', 'border-style', 'solid')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'tester', password: 'sekret' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#new-blog_title').type('a blog created by cypress')
+      cy.get('#new-blog_author').type('Tester 2')
+      cy.get('#new-blog_url').type('http://www.localhost-test.com')
+      cy.contains('create').click()
+      cy.contains('a blog created by cypress')
+    })
+  })
+
 })
