@@ -147,14 +147,14 @@ const App = () => {
         <form onSubmit={handleLogin}>
           <div>
             username
-            <input type="text" value={username} name="username" onChange={({ target }) => setUsername(target.value)}/>
+            <input id="username" type="text" value={username} name="username" onChange={({ target }) => setUsername(target.value)}/>
           </div>
           <div>
             password
-            <input type="password" value={password} name="password" onChange={({ target }) => setPassword(target.value)}/>
+            <input id="password" type="password" value={password} name="password" onChange={({ target }) => setPassword(target.value)}/>
           </div>
           <div>
-            <button type="submit">login</button>
+            <button id="submit" type="submit">login</button>
           </div>
         </form>
       </div>
@@ -185,7 +185,7 @@ const App = () => {
       return null
     }
     return (
-      <div style={notificationStyle}>
+      <div style={notificationStyle} className={'error'}>
         {message}
       </div>
     )
