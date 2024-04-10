@@ -65,5 +65,19 @@ describe('Blog app', function() {
       cy.get('@likeButton-1').click()
       cy.get('@blogInfo-1').contains('likes: 1')
     })
+
+    it('user can delete his own blog', () => {
+      cy.createBlog({
+        'title': 'a blog created by cypress',
+        'author': 'Tester 2',
+        'url': 'http://www.localhost-test.com'
+      })
+      cy.contains('a blog created by cypress').parent().find('button').as('viewButton-1')
+      cy.get('@viewButton-1').click()
+      cy.contains('a blog created by cypress').parent().get('#blog-info').as('blogInfo-1')
+      cy.get('@blogInfo-1').contains('delete').as('deleteButton-1')
+      cy.get('@deleteButton-1').click()
+      cy.get('html').should('not.contain', 'a blog created by cypress')
+    })
   })
 })
